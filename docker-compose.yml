@@ -27,6 +27,7 @@ services:
       DB_DATABASE: zhidui_nantong
       DB_USERNAME: liuyanban
       DB_PASSWORD: liuyanban-dev-password
+      DB_TIMEZONE: "+08:00"
     volumes:
       - ./:/var/www/html:ro
     depends_on:
@@ -50,6 +51,7 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./database/migrations/001_init.sql:/docker-entrypoint-initdb.d/10-init.sql:ro
+      - ./database/migrations/002_reply_status.sql:/docker-entrypoint-initdb.d/15-reply-status.sql:ro
       - ./database/seeds/001_development.sql:/docker-entrypoint-initdb.d/20-seed.sql:ro
     restart: unless-stopped
 

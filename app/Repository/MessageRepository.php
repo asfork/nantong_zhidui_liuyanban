@@ -19,7 +19,7 @@ final class MessageRepository
             COUNT(*) AS total,
             SUM(CASE WHEN EXISTS (
                 SELECT 1 FROM liuyan_reply r
-                WHERE r.message_id = m.id AND r.deleted_at IS NULL
+                WHERE r.message_id = m.id AND r.deleted_at IS NULL AND r.status = 'published'
             ) THEN 1 ELSE 0 END) AS replied
             FROM liuyan_message m
             WHERE " . $baseWhere;
@@ -44,9 +44,9 @@ final class MessageRepository
         );
 
         if ($replyStatus === 'replied') {
-            $conditions[] = 'EXISTS (SELECT 1 FROM liuyan_reply rx WHERE rx.message_id = m.id AND rx.deleted_at IS NULL)';
+            $conditions[] = "EXISTS (SELECT 1 FROM liuyan_reply rx WHERE rx.message_id = m.id AND rx.deleted_at IS NULL AND rx.status = 'published')";
         } elseif ($replyStatus === 'waiting') {
-            $conditions[] = 'NOT EXISTS (SELECT 1 FROM liuyan_reply rx WHERE rx.message_id = m.id AND rx.deleted_at IS NULL)';
+            $conditions[] = "NOT EXISTS (SELECT 1 FROM liuyan_reply rx WHERE rx.message_id = m.id AND rx.deleted_at IS NULL AND rx.status = 'published')";
         }
 
         $where = implode(' AND ', $conditions);
@@ -68,7 +68,7 @@ final class MessageRepository
             LEFT JOIN liuyan_reply r ON r.id = (
                 SELECT rr.id
                 FROM liuyan_reply rr
-                WHERE rr.message_id = m.id AND rr.deleted_at IS NULL
+                WHERE rr.message_id = m.id AND rr.deleted_at IS NULL AND rr.status = 'published'
                 ORDER BY rr.id DESC
                 LIMIT 1
             )
@@ -106,4 +106,3 @@ final class MessageRepository
         return (int) $this->pdo->lastInsertId();
     }
 }
-

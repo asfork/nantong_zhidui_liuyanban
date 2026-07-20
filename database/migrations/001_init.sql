@@ -50,4 +50,3 @@ CREATE TABLE IF NOT EXISTS `liuyan_operation_log` (
     KEY `idx_log_admin_time` (`admin_id`, `created_at`),
     KEY `idx_log_target` (`target_type`, `target_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-

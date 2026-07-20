@@ -51,8 +51,44 @@ docker compose exec mysql mysql --version
 - 新留言默认进入待审核状态。
 - 记录来源 IP，不在公开页面展示。
 - 已实现 CSRF、基础频率限制、输出转义和安全响应头。
+- 管理后台支持独立登录、组合筛选、分页和当前留言高亮。
+- 审核、回复、展示和删除状态分别管理，回复发布不会自动公开留言。
+- 支持回复草稿、回复历史、批量审核、批量隐藏和批量恢复。
+- 删除采用可恢复的软删除，并提供回收站。
+- 登录、审核、回复、隐藏、恢复和软删除等操作均写入操作日志。
 
-管理后台登录、审核、回复、隐藏、删除和操作日志页面将在后续阶段实现；数据表已预留。
+管理后台访问地址：
+
+```text
+http://localhost:8088/liuyanban/admin/
+```
+
+本地测试账号仍为 `admin` / `password`，仅用于开发环境。
+
+## 数据库迁移
+
+全新 Docker 数据卷会按顺序执行：
+
+```text
+database/migrations/001_init.sql
+database/migrations/002_reply_status.sql
+database/seeds/001_development.sql
+```
+
+已有数据库升级到当前版本时，在备份后执行：
+
+```sh
+mysql -u数据库账号 -p zhidui_nantong < database/migrations/002_reply_status.sql
+```
+
+该迁移为回复表增加独立的“草稿/已发布”状态。每个版本化迁移只能执行一次。
+
+## 验证
+
+```sh
+docker compose exec php php tests/smoke.php
+docker compose exec php sh -lc "find app config public tests -name '*.php' -print0 | xargs -0 -n1 php -l"
+```
 
 ## 生产部署
 
@@ -65,4 +101,3 @@ Docker 仅用于开发验证。生产环境使用 Windows 10 x64、phpStudy、Ap
 3. 从 `.env.example` 对应项配置数据库和基础路径，不提交真实密码。
 4. 对老项目实际 `admin` 表只授予 `SELECT` 权限。
 5. 替换测试管理员字段映射和密码校验驱动。
-

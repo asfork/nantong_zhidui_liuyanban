@@ -1,110 +1,119 @@
-# Design QA
+# Design QA — 留言管理页面
 
 ## Comparison Target
 
-- Source visual truth: `/Users/steve/Desktop/087A0E08-6E50-456A-A023-7333804B64E0_1_102_o.jpeg`
-- Implemented route: `http://127.0.0.1:8088/liuyanban/`
-- Desktop viewport: `864 × 900`
-- Mobile viewport: `390 × 844`
-- State: public message board, “全部” filter active, replies collapsed, empty submission form
+- Source visual truth: `audit/figma-liuyan-admin/01-admin-management.png`
+- Implemented route: `http://127.0.0.1:8088/liuyanban/admin/`
+- Desktop viewport: `1536 × 1024`
+- Additional responsive viewports: `820 × 900` and `390 × 844`
+- State: authenticated administrator, normal-message filter, first list row selected, no unsaved reply text
 
 ## Evidence
 
-- Desktop implementation: `artifacts/design-qa/01-desktop-viewport.png`
-- Desktop top comparison: `artifacts/design-qa/09-top-comparison.png`
-- Form implementation: `artifacts/design-qa/06-form-focused.png`
-- Form comparison: `artifacts/design-qa/11-form-comparison.png`
-- Mobile implementation: `artifacts/design-qa/03-mobile-390x844.png`
+- Final desktop implementation: `artifacts/admin-design-qa/06-admin-final-desktop-1536.png`
+- Full desktop comparison: `artifacts/admin-design-qa/07-reference-final-comparison.png`
+- Final detail and reply region: `artifacts/admin-design-qa/08-admin-final-detail-1536.png`
+- Focused detail comparison: `artifacts/admin-design-qa/09-detail-comparison.png`
+- Tablet implementation: `artifacts/admin-design-qa/04-admin-tablet-820.png`
+- Mobile implementation: `artifacts/admin-design-qa/05-admin-mobile-390.png`
 
-The full-view comparison uses the same 864-pixel desktop width and the same resting state. The source image is cropped to the corresponding top viewport because the requested removal of its header, navigation, search, and breadcrumb changes the page height. A focused form comparison is included because the form text and controls are too small to judge reliably in the full-page source image.
+The full-view comparison places the 1536 × 1024 source and implementation on one canvas. The implementation intentionally uses larger rows and controls, so the detail editor sits below the first desktop viewport; the focused comparison evaluates that region separately.
 
 ## Required Fidelity Surfaces
 
 ### Fonts and typography
 
-- The implementation keeps the reference's Chinese sans-serif government-service tone.
-- Body text is intentionally increased to 16px with a 1.65 line height to satisfy the accepted P2 accessibility recommendation.
-- Headings and status labels preserve the reference hierarchy with stronger optical weight.
-- No actionable wrapping, clipping, or truncation was found at desktop or mobile widths.
+- The implementation preserves the source's Chinese sans-serif administrative tone through Microsoft YaHei, PingFang SC and Noto Sans CJK fallbacks.
+- Table text remains compact but is larger than the source to improve legibility; headings, status labels and selected-row emphasis retain the original hierarchy.
+- No clipped headings, broken control labels or unreadable status text were found at the tested widths.
 
 ### Spacing and layout rhythm
 
-- The blue-white card system, bordered list, left metadata column, status placement, and reply hierarchy match the reference language.
-- Vertical spacing is intentionally more generous than the source because the accepted P2 work enlarged text and interaction targets.
-- The mobile layout correctly changes message metadata and form controls to a single-column flow with no horizontal overflow.
+- The dark-blue header, pale-blue table head, thin table dividers and dense desktop grid match the source language.
+- The desktop filter row was tightened after the first QA pass so all filters and actions fit on one row at 1536px.
+- Larger targets and row spacing intentionally move the detail editor below the fold instead of reproducing the source's very small text and links.
+- At 820px and 390px, the page body does not overflow horizontally; only the table's labeled scroll container scrolls horizontally.
 
 ### Colors and visual tokens
 
-- The implementation retains the reference's dark blue, action blue, pale blue, neutral border, green replied state, and warm waiting state.
-- Contrast is strengthened for body copy, timestamps, borders, and status labels.
-- Status meaning is communicated by text as well as color.
+- Existing public-page blue, neutral, green, amber and red tokens are reused.
+- Audit, reply, display and deletion states use both text and bordered background treatments, not color alone.
+- Selected rows use a pale-blue fill and left accent consistent with the source's active treatment.
 
 ### Image quality and asset fidelity
 
-- The top decorative header, navigation icons, search icon, and user avatar were removed rather than approximated, as explicitly requested by the user and accepted in P0.
-- The implementation contains no fake image placeholders, handcrafted SVGs, CSS-drawn icons, or substituted emoji.
-- No remaining page section requires a raster image asset.
+- The source management page contains no required photographic or illustrative assets.
+- No placeholder imagery, custom SVG, CSS illustration, emoji or approximated icon asset was introduced.
+- Native form controls are used for date and selection behavior.
 
 ### Copy and content
 
-- Contact name, telephone, and user ID collection are removed.
-- A non-identifying message number replaces the masked user ID.
-- The notice states that submissions enter review and that source IP is recorded only for security auditing.
-- Public statuses clearly separate “待回复” from internal “待审核”.
-- The form explicitly tells users not to submit personal information and that publication is not immediate.
+- The original terms are retained where safe, while ambiguous or destructive copy is corrected: “删除” becomes “移至回收站”, “保存回复” becomes “保存草稿”, and the public condition is displayed explicitly.
+- Audit, reply, display and deletion states are named independently.
+- Reply help text clearly states that publishing a reply does not automatically change audit or display status.
 
 ## Interaction Verification
 
-- “待回复” filter: passed; only three unreplied, approved messages remain visible.
-- Reply disclosure: passed; the correct administrator reply opens and closes through a keyboard-operable native `details` control.
-- Character counters: passed for title and content.
-- Agreement checkbox: passed.
-- Validation recovery: passed; an invalid security answer displays a field-related error while preserving title, content, and checkbox state.
-- Successful pending write: passed in a rolled-back database transaction; new records receive `pending`, `visible`, and the source IP.
-- Public data boundary: passed; seeded pending and hidden messages are absent from the DOM.
-- Removed scope: passed; no top navigation, search input, contact field, phone field, or user ID is present.
+- Authentication: passed with the PHP 7.3 bcrypt development account; unauthenticated management access redirects to login.
+- Status filtering: passed; selecting “待审核” returns exactly the seeded pending message and preserves the selected filter in the URL.
+- Current-row context: passed; the selected row and “正在处理 #ID” detail heading agree.
+- Batch selection: passed; “已选择 1 条” updates and the Apply button enables only after both a row and action are selected.
+- Draft/publish separation: passed; a draft is excluded from the public “已回复” filter, while publishing makes the reply visible without automatically changing audit or display state.
+- Soft deletion: passed; moving a test message to the recycle bin removes it from the public page and restoration clears `deleted_at`.
+- Operation logging: passed for login, audit, reply, hide, soft-delete and restore paths.
+- Responsive overflow: passed at 820px and 390px; the body width equals the viewport content width.
 - Browser console errors: none.
-- Security challenge success was not submitted through the browser; the browser run did not solve the visible challenge. The server-side successful-write path was verified separately in a rolled-back transaction.
 
 ## Comparison History
 
 ### Iteration 1
 
-Earlier P0/P1/P2 findings came from the approved audit of the source image:
+Findings:
 
-- P0: remove navigation/search, contact details and masked user identity; enforce review-only public visibility; add IP/privacy notice.
-- P1: add a visible “我要留言” action, explicit reply controls, consistent collapsed state, correct pagination, validation recovery and submission feedback.
-- P2: increase typography and contrast, enlarge targets, support keyboard use, provide an accessible security challenge and reflow on mobile.
+- P0: the source did not represent audit state separately and treated deletion as irreversible.
+- P0: reply publishing was coupled to external display.
+- P1: row actions were crowded, current selection was unclear, batch selection had no count, and reply save/publish wording was ambiguous.
+- P2: narrow-screen title layout was cramped and the initial desktop filter grid used unnecessary vertical space.
 
-Fixes made:
+Fixes:
 
-- All P0/P1/P2 items above were implemented in the PHP page, CSS, JavaScript, database query and form handler.
-- Post-fix evidence is recorded in the desktop, form, and mobile screenshots listed above.
+- Added independent audit, reply, display and deletion states, soft deletion/recovery, operation logs and explicit public eligibility.
+- Reduced each row to a single “处理” action and moved state-changing actions into the selected detail region.
+- Added selected-row styling, batch count/disabled states, reply drafts, reply history and message operation history.
+- Tightened the desktop filter grid and stacked the title row on small screens.
 
-Post-fix result:
+### Iteration 2
 
-- No actionable P0, P1, or P2 visual or interaction findings remain.
+Post-fix evidence:
+
+- `06-admin-final-desktop-1536.png` shows the compact single-row desktop filters and clear selected-row state.
+- `08-admin-final-detail-1536.png` shows independent state actions, source IP visibility, reply draft/publish controls and history panels.
+- `04-admin-tablet-820.png` and `05-admin-mobile-390.png` show contained table overflow and usable filter controls.
+
+No actionable P0, P1 or P2 findings remain.
 
 ## Findings
 
-No actionable P0/P1/P2 findings remain. The larger type, taller cards, removed imagery, and simplified top region are intentional outcomes of the approved P0/P1/P2 changes rather than fidelity regressions.
+No actionable P0/P1/P2 visual or interaction findings remain. The detail editor being below the first viewport is an intentional accessibility trade-off caused by larger text, controls and table rows.
 
 ## Open Questions
 
-- The real production footer ownership and support information remains unknown, so the implementation uses a neutral internal-service footer instead of template placeholders.
-- Management-page visual QA remains outside this public-page build.
+- Production integration still requires the real `admin` field mapping, password algorithm and allowed `user_type` values.
+- The final phpStudy port, extensions and Windows deployment smoke test remain deployment-stage checks.
 
 ## Implementation Checklist
 
-- [x] Keep the application rooted at `/liuyanban/`.
-- [x] Preserve PHP 7.3.4 and MySQL 5.7.26 compatibility.
-- [x] Keep public queries limited to approved, visible, non-deleted messages.
-- [x] Preserve CSRF, rate limiting, output escaping, session isolation and source-IP recording.
-- [x] Retain desktop and mobile screenshots for future regression checks.
+- [x] Preserve `/liuyanban/` in routes, assets, forms, redirects and Session Cookie Path.
+- [x] Keep PHP 7.3.4 and MySQL 5.7.26 compatibility.
+- [x] Separate audit, reply, display and deletion state.
+- [x] Use soft deletion and recovery.
+- [x] Keep drafts out of public replies.
+- [x] Protect writes with authentication, CSRF validation and prepared statements.
+- [x] Record administrator operations.
+- [x] Verify desktop, tablet and mobile rendering in the in-app browser.
 
 ## Follow-up Polish
 
-- Production testing should replace the neutral footer with confirmed organization and support information.
-- The management pages should reuse the same typography, status colors, spacing, and accessibility rules.
+- Confirm the production administrator adapter before deployment.
 
 final result: passed

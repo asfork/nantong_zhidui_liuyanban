@@ -7,30 +7,6 @@ function valid_filter($value)
     return in_array($value, array('all', 'replied', 'waiting'), true) ? $value : 'all';
 }
 
-function pagination_items($currentPage, $totalPages)
-{
-    if ($totalPages <= 7) {
-        return range(1, $totalPages);
-    }
-
-    $items = array(1);
-    $start = max(2, $currentPage - 1);
-    $end = min($totalPages - 1, $currentPage + 1);
-
-    if ($start > 2) {
-        $items[] = 'ellipsis';
-    }
-    for ($page = $start; $page <= $end; $page++) {
-        $items[] = $page;
-    }
-    if ($end < $totalPages - 1) {
-        $items[] = 'ellipsis';
-    }
-    $items[] = $totalPages;
-
-    return $items;
-}
-
 function page_url($page, $filter)
 {
     $query = array('page' => (int) $page);
@@ -115,4 +91,3 @@ if ($repository !== null) {
 $submitted = isset($_GET['submitted']) && $_GET['submitted'] === '1';
 
 require dirname(__DIR__) . '/app/View/public_board.php';
-

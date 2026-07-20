@@ -1,8 +1,8 @@
 SET NAMES utf8mb4;
 
 INSERT INTO `admin` (`username`, `password`, `user_type`)
-VALUES ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 1)
-ON DUPLICATE KEY UPDATE `user_type` = VALUES(`user_type`);
+VALUES ('admin', '$2y$10$6vAzkHNbW95I8.GxUrTG.Of3OHnmSQ0aCRZfOrDld742xAVljAnAi', 1)
+ON DUPLICATE KEY UPDATE `password` = VALUES(`password`), `user_type` = VALUES(`user_type`);
 
 INSERT INTO `liuyan_message`
     (`id`, `title`, `content`, `audit_status`, `display_status`, `source_ip`, `created_at`, `updated_at`)
@@ -18,10 +18,9 @@ VALUES
 ON DUPLICATE KEY UPDATE `title` = VALUES(`title`);
 
 INSERT INTO `liuyan_reply`
-    (`id`, `message_id`, `admin_id`, `content`, `created_at`, `updated_at`)
+    (`id`, `message_id`, `admin_id`, `content`, `status`, `published_at`, `created_at`, `updated_at`)
 VALUES
-    (1, 1, 1, '您好，您反映的充电设施建议已收悉。相关部门正在结合场地和安全条件开展可行性研究，后续将根据实际情况推进。感谢您的建议。', '2026-07-19 16:18:00', '2026-07-19 16:18:00'),
-    (2, 2, 1, '您好，办理居住证明通常需要身份证明、居住地址证明等材料。具体要求请以属地服务窗口公布的信息为准。', '2026-07-18 17:02:00', '2026-07-18 17:02:00'),
-    (3, 4, 1, '您好，相关道路积水问题已转交维护部门排查，我们会结合现场情况安排处理。感谢您的反馈。', '2026-07-16 10:05:00', '2026-07-16 10:05:00')
+    (1, 1, 1, '您好，您反映的充电设施建议已收悉。相关部门正在结合场地和安全条件开展可行性研究，后续将根据实际情况推进。感谢您的建议。', 'published', '2026-07-19 16:18:00', '2026-07-19 16:18:00', '2026-07-19 16:18:00'),
+    (2, 2, 1, '您好，办理居住证明通常需要身份证明、居住地址证明等材料。具体要求请以属地服务窗口公布的信息为准。', 'published', '2026-07-18 17:02:00', '2026-07-18 17:02:00', '2026-07-18 17:02:00'),
+    (3, 4, 1, '您好，相关道路积水问题已转交维护部门排查，我们会结合现场情况安排处理。感谢您的反馈。', 'published', '2026-07-16 10:05:00', '2026-07-16 10:05:00', '2026-07-16 10:05:00')
 ON DUPLICATE KEY UPDATE `content` = VALUES(`content`);
-
