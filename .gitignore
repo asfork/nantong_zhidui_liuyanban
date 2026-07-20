@@ -1,0 +1,7 @@
+.env
+.DS_Store
+var/log/*
+var/session/*
+!var/log/.gitkeep
+!var/session/.gitkeep
+

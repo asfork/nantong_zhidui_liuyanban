@@ -1,0 +1,57 @@
+services:
+  apache:
+    image: httpd:2.4.39
+    platform: linux/amd64
+    ports:
+      - "8088:80"
+    volumes:
+      - ./:/var/www/html:ro
+      - ./docker/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+    depends_on:
+      - php
+    restart: unless-stopped
+
+  php:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    environment:
+      APP_ENV: development
+      APP_DEBUG: "1"
+      APP_BASE_PATH: /liuyanban
+      APP_TIMEZONE: Asia/Shanghai
+      APP_SESSION_NAME: LIUYANBANSESSID
+      DB_HOST: mysql
+      DB_PORT: "3306"
+      DB_DATABASE: zhidui_nantong
+      DB_USERNAME: liuyanban
+      DB_PASSWORD: liuyanban-dev-password
+    volumes:
+      - ./:/var/www/html:ro
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
+  mysql:
+    image: mysql/mysql-server:5.7.26
+    platform: linux/amd64
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+08:00
+      - --sql-mode=STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+    environment:
+      MYSQL_DATABASE: zhidui_nantong
+      MYSQL_USER: liuyanban
+      MYSQL_PASSWORD: liuyanban-dev-password
+      MYSQL_ROOT_PASSWORD: root-dev-password
+      TZ: Asia/Shanghai
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./database/migrations/001_init.sql:/docker-entrypoint-initdb.d/10-init.sql:ro
+      - ./database/seeds/001_development.sql:/docker-entrypoint-initdb.d/20-seed.sql:ro
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
