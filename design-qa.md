@@ -1,157 +1,112 @@
-# Design QA — 留言管理页面
+# Design QA — 公开留言板政务蓝 Hero
 
 ## Comparison Target
 
-- Source visual truth: `audit/figma-liuyan-admin/01-admin-management.png`
-- Batch-management workflow baseline: `artifacts/batch-management-audit/02-selected.png`
-- Implemented route: `http://127.0.0.1:8088/liuyanban/admin/`
-- Desktop viewport: `1536 × 1024`
-- Additional responsive viewports: `820 × 900` and `390 × 844`
-- State: authenticated administrator, normal-message filter, batch-selected messages #10 and #7, no unsaved reply text
+- Source visual truth: `artifacts/design-qa/07-reference-top.png`
+- Source target crop: `artifacts/design-qa/12-reference-blue-header.png`
+- Implemented route: `http://127.0.0.1:8088/liuyanban/`
+- Desktop test viewport: requested `1440 × 900`; browser capture `1425 × 891`; Hero CSS box `1120 × 220`
+- Mobile test viewport: requested `390 × 844`; effective content viewport `375 × 844`; capture `375 × 812`; Hero CSS box approximately `351 × 378`
+- State: public board default filter with seven visible test messages
 
 ## Evidence
 
-- Final desktop implementation: `artifacts/admin-design-qa/06-admin-final-desktop-1536.png`
-- Full desktop comparison: `artifacts/admin-design-qa/07-reference-final-comparison.png`
-- Final detail and reply region: `artifacts/admin-design-qa/08-admin-final-detail-1536.png`
-- Focused detail comparison: `artifacts/admin-design-qa/09-detail-comparison.png`
-- Tablet implementation: `artifacts/admin-design-qa/04-admin-tablet-820.png`
-- Mobile implementation: `artifacts/admin-design-qa/05-admin-mobile-390.png`
-- Batch toolbar desktop initial state: `artifacts/batch-management-implementation/01-desktop-initial-1536.png`
-- Batch toolbar desktop selected state: `artifacts/batch-management-implementation/02-desktop-selected-1536.png`
-- Batch toolbar tablet selected state: `artifacts/batch-management-implementation/03-tablet-selected-820.png`
-- Batch toolbar mobile selected state: `artifacts/batch-management-implementation/04-mobile-selected-390.png`
-- Batch toolbar normalized selected state: `artifacts/batch-management-implementation/05-selected-1253x705.png`
-- Batch toolbar full comparison: `artifacts/batch-management-implementation/06-full-comparison.png`
-- Batch toolbar focused comparison: `artifacts/batch-management-implementation/07-toolbar-comparison.png`
+- Generated project asset: `public/assets/images/hero-government-blue-v2.jpg` (`1983 × 793`, progressive JPEG)
+- Final desktop implementation: `artifacts/design-qa/15-page-blue-v2-desktop.jpg`
+- Final desktop focused Hero: `artifacts/design-qa/17-hero-blue-v2-desktop.jpg`
+- Final mobile implementation: `artifacts/design-qa/16-page-blue-v2-mobile.jpg`
+- Combined source/implementation comparison: `artifacts/design-qa/14-hero-blue-comparison.jpg`
+- Building-position before/after comparison: `artifacts/design-qa/18-hero-building-position-comparison.jpg`
 
-The full-view comparison places the 1536 × 1024 source and implementation on one canvas. The implementation intentionally uses larger rows and controls, so the detail editor sits below the first desktop viewport; the focused comparison evaluates that region separately.
-
-The batch-management comparison additionally places the before and after selected states side by side at the same 1253 × 705 viewport. The focused comparison isolates the toolbar so action visibility, selected-count hierarchy and danger styling can be judged directly.
+The comparison image places the reference government-blue header crop above the implemented Hero. The implementation crop was normalized from `1120 × 220` to `864 × 170`; density was 1 CSS pixel per captured pixel. The reference crop remains `864 × 104`. The different heights are intentional because the existing Hero also contains two explanatory paragraphs and a primary action.
 
 ## Required Fidelity Surfaces
 
 ### Fonts and typography
 
-- The implementation preserves the source's Chinese sans-serif administrative tone through Microsoft YaHei, PingFang SC and Noto Sans CJK fallbacks.
-- Table text remains compact but is larger than the source to improve legibility; headings, status labels and selected-row emphasis retain the original hierarchy.
-- No clipped headings, broken control labels or unreadable status text were found at the tested widths.
+- Existing Microsoft YaHei, PingFang SC and Noto Sans CJK SC fallbacks remain unchanged.
+- White title and body copy preserve a clear hierarchy over the blue image; text shadow is restrained and used only to protect legibility.
+- Desktop and mobile captures show no clipped headings or unintended wrapping.
 
 ### Spacing and layout rhythm
 
-- The dark-blue header, pale-blue table head, thin table dividers and dense desktop grid match the source language.
-- The desktop filter row was tightened after the first QA pass so all filters and actions fit on one row at 1536px.
-- Larger targets and row spacing intentionally move the detail editor below the fold instead of reproducing the source's very small text and links.
-- At 820px and 390px, the page body does not overflow horizontally; only the table's labeled scroll container scrolls horizontally.
+- Desktop Hero remains aligned to the existing `1120px` content grid and uses the established card radius.
+- The action remains on the right at desktop width and becomes a full-width control below the copy on mobile.
+- The mobile body has no horizontal overflow: document `scrollWidth` equals viewport width (`375px`).
 
 ### Colors and visual tokens
 
-- Existing public-page blue, neutral, green, amber and red tokens are reused.
-- Audit, reply, display and deletion states use both text and bordered background treatments, not color alone.
-- Selected rows use a pale-blue fill and left accent consistent with the source's active treatment.
-- Active batch mode adds a pale-blue sticky toolbar, while the destructive recycle-bin action remains red and all other states reuse the established administrative palette.
+- The asset matches the reference's navy-to-cobalt government portal palette with restrained cyan highlights.
+- White foreground text and the white primary action maintain strong contrast against the dark left and blue right regions.
+- The previous white Hero surface and blue top border have been replaced by the requested image treatment.
 
 ### Image quality and asset fidelity
 
-- The source management page contains no required photographic or illustrative assets.
-- No placeholder imagery, custom SVG, CSS illustration, emoji or approximated icon asset was introduced.
-- Native form controls are used for date and selection behavior.
+- A real local raster image is used rather than CSS illustration, SVG approximation or remote content.
+- The image contains the required low-contrast city and civic architecture silhouette, quiet left text area and brighter right-side depth.
+- In V2, the tallest rooftop begins around the image midpoint and the rendered skyline is concentrated along the Hero's bottom edge, keeping architecture out of the main reading area.
+- The production asset is a progressive `1983 × 793` JPEG compressed to about `72KB`, suitable for offline intranet deployment and responsive cover cropping.
+- Mobile background positioning keeps the copy over the darker portion of the image and the buildings below the copy.
 
 ### Copy and content
 
-- The original terms are retained where safe, while ambiguous or destructive copy is corrected: “删除” becomes “移至回收站”, “保存回复” becomes “保存草稿”, and the public condition is displayed explicitly.
-- Audit, reply, display and deletion states are named independently.
-- Reply help text clearly states that publishing a reply does not automatically change audit or display status.
+- Existing page title, legal notice, audit explanation and “我要留言” action are unchanged.
+- Search, navigation and reference-site branding were not reintroduced, consistent with the earlier page scope.
+- The generated background contains no text, logo, emblem, watermark or UI controls.
 
 ## Interaction Verification
 
-- Authentication: passed with the PHP 7.3 bcrypt development account; unauthenticated management access redirects to login.
-- Status filtering: passed; selecting “待审核” returns exactly the seeded pending message and preserves the selected filter in the URL.
-- Current-row context: passed; the selected row and “正在处理 #ID” detail heading agree.
-- Batch selection: passed; the selected count and row highlights update immediately, all relevant actions enable after selection, and “取消选择” clears the state.
-- Batch action discoverability: passed; normal messages expose approve, reject, show, hide and recycle-bin actions as direct buttons, while the recycle-bin filter exposes only restore.
-- Batch action submission: passed end to end; seeded message #8 was batch-shown and batch-hidden again, the final state is hidden, and both operations were written to the operation log.
-- Static asset refresh: passed; CSS and JavaScript URLs include file modification versions so older cached batch scripts do not override the new interaction.
-- Draft/publish separation: passed; a draft is excluded from the public “已回复” filter, while publishing makes the reply visible without automatically changing audit or display state.
-- Soft deletion: passed; moving a test message to the recycle bin removes it from the public page and restoration clears `deleted_at`.
-- Operation logging: passed for login, audit, reply, hide, soft-delete and restore paths.
-- Responsive overflow: passed at 820px and 390px; the body width equals the viewport content width.
+- Background asset loaded from `/liuyanban/assets/images/hero-government-blue-v2.jpg`.
+- “我要留言” resolves to exactly one link and scrolls to `#message-form`.
+- Desktop and mobile rendering passed in the Codex in-app browser.
 - Browser console errors: none.
+- No horizontal overflow at the mobile breakpoint.
 
 ## Comparison History
 
 ### Iteration 1
 
-Findings:
+- The first rendered desktop and mobile captures matched the target art direction.
+- No P0, P1 or P2 differences were found for the requested background change.
+- No follow-up visual correction was required.
 
-- P0: the source did not represent audit state separately and treated deletion as irreversible.
-- P0: reply publishing was coupled to external display.
-- P1: row actions were crowded, current selection was unclear, batch selection had no count, and reply save/publish wording was ambiguous.
-- P2: narrow-screen title layout was cramped and the initial desktop filter grid used unnecessary vertical space.
-
-Fixes:
-
-- Added independent audit, reply, display and deletion states, soft deletion/recovery, operation logs and explicit public eligibility.
-- Reduced each row to a single “处理” action and moved state-changing actions into the selected detail region.
-- Added selected-row styling, batch count/disabled states, reply drafts, reply history and message operation history.
-- Tightened the desktop filter grid and stacked the title row on small screens.
-
-### Iteration 2
-
-Post-fix evidence:
-
-- `06-admin-final-desktop-1536.png` shows the compact single-row desktop filters and clear selected-row state.
-- `08-admin-final-detail-1536.png` shows independent state actions, source IP visibility, reply draft/publish controls and history panels.
-- `04-admin-tablet-820.png` and `05-admin-mobile-390.png` show contained table overflow and usable filter controls.
-
-No actionable P0, P1 or P2 findings remain.
-
-### Iteration 3 — Batch management P0
+### Iteration 2 — Building visual weight
 
 Earlier finding:
 
-- P1: the checkbox supported selection, but the actual actions were hidden in a low-emphasis select-and-apply control, so the workflow could be mistaken for unfinished functionality.
+- P2: the skyline occupied the center-right of the rendered Hero and competed with the notice copy and primary action.
 
-Fixes:
+Fix:
 
-- Replaced the action dropdown with visible approve, reject, show, hide and recycle-bin buttons.
-- Added an always-visible instruction, selected count, 100-item limit, active sticky treatment, selected-row treatment and cancel-selection action.
-- Scoped normal-message and recycle-bin actions to the current data range.
-- Added asset URL versioning to prevent stale JavaScript or CSS after deployment.
+- Moved the full skyline and civic architecture group into the bottom third without changing the palette, lighting, left-side negative space or page layout.
+- Switched the page to the non-destructive V2 asset and retained the original rendered capture for comparison.
 
 Post-fix evidence:
 
-- `06-full-comparison.png` shows the complete before/after selected flow at the same viewport.
-- `07-toolbar-comparison.png` shows that the selected count and available actions are now visible without opening another control.
-- `03-tablet-selected-820.png` and `04-mobile-selected-390.png` show wrapped action buttons without body-level horizontal overflow.
+- `18-hero-building-position-comparison.jpg` shows the original implementation above and V2 below at the same `1120 × 220` Hero size.
+- `15-page-blue-v2-desktop.jpg` and `16-page-blue-v2-mobile.jpg` confirm that the building group no longer occupies the main reading region.
 
-No actionable P0, P1 or P2 findings remain after the batch-management pass.
+No actionable P0, P1 or P2 findings remain after the second pass.
 
 ## Findings
 
-No actionable P0/P1/P2 visual or interaction findings remain. The detail editor being below the first viewport is an intentional accessibility trade-off caused by larger text, controls and table rows.
+No actionable P0/P1/P2 visual or interaction findings remain. The generated skyline is slightly more detailed than the reference's translucent silhouette, but its lower position and reduced visible area prevent it from competing with the foreground copy.
 
 ## Open Questions
 
-- Production integration still requires the real `admin` field mapping, password algorithm and allowed `user_type` values.
-- The final phpStudy port, extensions and Windows deployment smoke test remain deployment-stage checks.
+- None for this change.
 
 ## Implementation Checklist
 
-- [x] Preserve `/liuyanban/` in routes, assets, forms, redirects and Session Cookie Path.
-- [x] Keep PHP 7.3.4 and MySQL 5.7.26 compatibility.
-- [x] Separate audit, reply, display and deletion state.
-- [x] Use soft deletion and recovery.
-- [x] Keep drafts out of public replies.
-- [x] Protect writes with authentication, CSRF validation and prepared statements.
-- [x] Record administrator operations.
-- [x] Verify desktop, tablet and mobile rendering in the in-app browser.
-- [x] Make batch actions directly discoverable after selection.
-- [x] Restrict recycle-bin batch actions to restoration.
-- [x] Version static asset URLs to invalidate stale browser caches.
+- [x] Use a local offline image asset.
+- [x] Preserve `/liuyanban/` asset resolution.
+- [x] Match the government-blue reference art direction.
+- [x] Preserve readable HTML copy and the existing action.
+- [x] Verify desktop and mobile crops.
+- [x] Verify the Hero anchor interaction and browser console.
 
 ## Follow-up Polish
 
-- Confirm the production administrator adapter before deployment.
+- No required follow-up.
 
 final result: passed

@@ -81,15 +81,23 @@ textarea {
 
 .notice-panel {
     display: flex;
+    min-height: 220px;
     align-items: center;
     justify-content: space-between;
     gap: 32px;
-    padding: 28px 32px;
-    border-top: 4px solid var(--blue-700);
+    padding: 36px 40px;
+    color: #fff;
+    background-color: #073b80;
+    background-image: url("../images/hero-government-blue-v2.jpg");
+    background-position: center center;
+    background-size: cover;
+    border-color: #0b5aba;
+    box-shadow: 0 12px 28px rgba(7, 59, 128, 0.2);
 }
 
 .notice-copy {
-    max-width: 820px;
+    max-width: 790px;
+    text-shadow: 0 1px 3px rgba(0, 31, 79, 0.42);
 }
 
 .section-kicker {
@@ -115,9 +123,17 @@ h1 {
     line-height: 1.3;
 }
 
+.notice-panel .section-kicker {
+    color: #b9dcff;
+}
+
+.notice-panel h1 {
+    color: #fff;
+}
+
 .notice-panel p:not(.section-kicker) {
     margin-bottom: 5px;
-    color: var(--ink-700);
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .primary-button,
@@ -159,6 +175,16 @@ h1 {
 .notice-action {
     flex: 0 0 auto;
     min-width: 132px;
+    color: var(--blue-900);
+    background: #fff;
+    border-color: #fff;
+    box-shadow: 0 5px 16px rgba(0, 31, 79, 0.22);
+}
+
+.notice-action:hover {
+    color: #fff;
+    background: var(--blue-900);
+    border-color: #fff;
 }
 
 .alert {
@@ -596,7 +622,9 @@ h1 {
     .notice-panel {
         align-items: flex-start;
         flex-direction: column;
-        padding: 22px 20px;
+        min-height: 0;
+        padding: 26px 22px;
+        background-position: 34% center;
     }
 
     .notice-action {
