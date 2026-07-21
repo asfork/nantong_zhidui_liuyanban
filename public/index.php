@@ -91,7 +91,7 @@ $messages = array('items' => array(), 'page' => 1, 'total' => 0, 'total_pages' =
 
 if ($repository !== null) {
     $counts = $repository->publicCounts();
-    $messages = $repository->publicMessages($filter, $page, 5);
+    $messages = $repository->publicMessages($filter, $page, 10);
 }
 
 $submitted = isset($_GET['submitted']) && $_GET['submitted'] === '1';

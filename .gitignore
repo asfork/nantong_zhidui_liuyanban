@@ -1,7 +1,9 @@
 .env
 .DS_Store
+dist/
+artifacts/deployment-export/
+artifacts/deployment-rehearsal/
 var/log/*
 var/session/*
 !var/log/.gitkeep
 !var/session/.gitkeep
-

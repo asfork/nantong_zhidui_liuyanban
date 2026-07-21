@@ -101,3 +101,19 @@ Docker 仅用于开发验证。生产环境使用 Windows 10 x64、phpStudy、Ap
 3. 从 `.env.example` 对应项配置数据库和基础路径，不提交真实密码。
 4. 对老项目实际 `admin` 表只授予 `SELECT` 权限。
 5. 替换测试管理员字段映射和密码校验驱动。
+
+导出无开发密钥的传统部署包：
+
+```sh
+./scripts/export-deployment.sh
+```
+
+部署包包含 Windows/phpStudy 配置模板、只创建 `liuyan_*` 表的生产初始化 SQL、最小权限授权示例、环境检查脚本和完整安装说明。开发用 Docker 配置、测试管理员 seed、设计产物和测试代码不会进入部署包。
+
+从导出的 ZIP 在全新隔离环境中演练导入：
+
+```sh
+./scripts/rehearse-deployment.sh dist/liuyanban-deployment-时间戳.zip
+```
+
+Windows 生产步骤详见 `deploy/INSTALL-WINDOWS.md`。

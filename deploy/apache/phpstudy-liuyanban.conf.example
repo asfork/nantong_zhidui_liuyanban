@@ -1,0 +1,43 @@
+# phpStudy Apache 2.4.39 站点附加配置示例。
+# 修改端口、目录和数据库密码后放入 phpStudy 对应的 vhost 配置。
+# Windows 路径统一使用正斜杠。
+
+Listen 8090
+
+<VirtualHost *:8090>
+    ServerName liuyanban.internal
+
+    RedirectMatch 301 ^/liuyanban$ /liuyanban/
+    Alias /liuyanban/ "D:/phpstudy_pro/WWW/liuyanban/public/"
+
+    <Directory "D:/phpstudy_pro/WWW/liuyanban/public">
+        Options -Indexes +FollowSymLinks
+        AllowOverride None
+        Require all granted
+        DirectoryIndex index.php
+    </Directory>
+
+    SetEnv APP_ENV "production"
+    SetEnv APP_DEBUG "0"
+    SetEnv APP_BASE_PATH "/liuyanban"
+    SetEnv APP_TIMEZONE "Asia/Shanghai"
+    SetEnv APP_SESSION_NAME "LIUYANBANSESSID"
+
+    SetEnv DB_HOST "127.0.0.1"
+    SetEnv DB_PORT "3306"
+    SetEnv DB_DATABASE "zhidui_nantong"
+    SetEnv DB_USERNAME "liuyanban_app"
+    SetEnv DB_PASSWORD "CHANGE_ME_STRONG_PASSWORD"
+    SetEnv DB_TIMEZONE "+08:00"
+
+    SetEnv ADMIN_TABLE "admin"
+    SetEnv ADMIN_ID_COLUMN "id"
+    SetEnv ADMIN_USERNAME_COLUMN "username"
+    SetEnv ADMIN_PASSWORD_COLUMN "password"
+    SetEnv ADMIN_TYPE_COLUMN "user_type"
+    SetEnv ADMIN_ALLOWED_TYPES "1"
+    SetEnv ADMIN_PASSWORD_DRIVER "bcrypt"
+
+    ErrorLog "D:/phpstudy_pro/WWW/liuyanban/var/log/apache-error.log"
+    CustomLog "D:/phpstudy_pro/WWW/liuyanban/var/log/apache-access.log" combined
+</VirtualHost>

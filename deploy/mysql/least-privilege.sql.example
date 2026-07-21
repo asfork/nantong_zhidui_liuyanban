@@ -1,0 +1,18 @@
+-- 先替换账号、来源地址和密码，再由数据库管理员执行。
+-- 如果应用与 MySQL 位于同一台 Windows 服务器，建议使用 127.0.0.1。
+
+CREATE USER 'liuyanban_app'@'127.0.0.1'
+IDENTIFIED BY 'CHANGE_ME_STRONG_PASSWORD';
+
+GRANT SELECT ON `zhidui_nantong`.`admin`
+TO 'liuyanban_app'@'127.0.0.1';
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON `zhidui_nantong`.`liuyan_message`
+TO 'liuyanban_app'@'127.0.0.1';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `zhidui_nantong`.`liuyan_reply`
+TO 'liuyanban_app'@'127.0.0.1';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `zhidui_nantong`.`liuyan_operation_log`
+TO 'liuyanban_app'@'127.0.0.1';
+
+FLUSH PRIVILEGES;
+SHOW GRANTS FOR 'liuyanban_app'@'127.0.0.1';

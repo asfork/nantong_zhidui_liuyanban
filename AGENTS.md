@@ -214,6 +214,15 @@ var/                 日志、缓存和 Session，禁止提交运行数据
 - 安装、升级、备份、回滚和日志排查说明。
 - 一份明确说明如何替换管理员表字段映射及密码校验驱动的文档。
 
+仓库中的标准交付演练命令为：
+
+```sh
+./scripts/export-deployment.sh
+./scripts/rehearse-deployment.sh dist/liuyanban-deployment-时间戳.zip
+```
+
+导出包不得包含开发测试管理员 seed、Docker 开发密码、设计产物或运行数据；演练必须使用独立 Docker 项目、端口和数据卷，不得清空现有开发数据库。
+
 生产部署不得覆盖老项目文件、修改老项目 PHP 配置或复用老项目 Session。老项目侧唯一计划内改动是增加指向 `http://IP:新端口/liuyanban/` 的链接。
 
 ## 当前待部署阶段确认事项
