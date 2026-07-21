@@ -200,6 +200,17 @@ var/                 日志、缓存和 Session，禁止提交运行数据
 
 如果仓库添加了统一测试或检查命令，应同步更新本文件和 README，确保新开发者能通过一组明确命令完成验证。
 
+当前标准开发验证命令：
+
+```sh
+docker compose exec php php tests/smoke.php
+docker compose exec php php tests/seed_prelaunch.php
+docker compose exec php php tests/prelaunch.php
+sh tests/http_prelaunch.sh
+```
+
+`tests/seed_prelaunch.php` 只管理标题以 `QA150-` 开头的开发测试留言，可重复执行；使用 `--cleanup` 仅清理这批测试数据。不得在生产数据库执行测试 seed。
+
 ## 生产交付要求
 
 最终交付不能只提供 Docker 镜像，必须包含：

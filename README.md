@@ -90,6 +90,22 @@ docker compose exec php php tests/smoke.php
 docker compose exec php sh -lc "find app config public tests -name '*.php' -print0 | xargs -0 -n1 php -l"
 ```
 
+上线前状态、分页和安全回归测试会生成 150 条标题以 `QA150-` 开头的开发数据，覆盖审核、回复、展示和回收站组合：
+
+```sh
+docker compose exec php php tests/seed_prelaunch.php
+docker compose exec php php tests/prelaunch.php
+sh tests/http_prelaunch.sh
+```
+
+生成器可重复执行，会先清理上一轮 `QA150-` 数据再重新生成。仅清理这批测试数据：
+
+```sh
+docker compose exec php php tests/seed_prelaunch.php --cleanup
+```
+
+`tests/http_prelaunch.sh` 默认检查 `http://127.0.0.1:8088/liuyanban`，也可将其他测试环境基础地址作为第一个参数传入。Windows/phpStudy 正式环境仍需按 `deploy/INSTALL-WINDOWS.md` 单独完成最终冒烟测试。
+
 ## 生产部署
 
 Docker 仅用于开发验证。生产环境使用 Windows 10 x64、phpStudy、Apache 2.4.39、PHP 7.3.4 和 MySQL 5.7.26。

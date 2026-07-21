@@ -761,7 +761,7 @@
     text-align: center;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1360px) {
     .admin-filter-form {
         grid-template-columns: repeat(4, minmax(150px, 1fr));
     }
@@ -769,6 +769,9 @@
     .admin-filter-keyword {
         grid-column: span 2;
     }
+}
+
+@media (max-width: 1180px) {
 
     .detail-grid {
         grid-template-columns: 1fr;
