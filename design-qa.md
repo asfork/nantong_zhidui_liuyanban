@@ -1,96 +1,106 @@
-# Design QA — 公开留言板政务蓝 Hero
+# Design QA — 公开留言回复箭头
 
 ## Comparison Target
 
-- Source visual truth: `artifacts/design-qa/07-reference-top.png`
-- Source target crop: `artifacts/design-qa/12-reference-blue-header.png`
+- Source visual truth: `artifacts/design-qa/21-reply-toggle-reference.png`
 - Implemented route: `http://127.0.0.1:8088/liuyanban/`
-- Desktop test viewport: requested `1440 × 900`; browser capture `1425 × 891`; Hero CSS box `1120 × 220`
-- Mobile test viewport: requested `390 × 844`; effective content viewport `375 × 844`; capture `375 × 812`; Hero CSS box approximately `351 × 378`
-- State: public board default filter with seven visible test messages
+- Desktop viewport: requested `1440 × 900`; effective page width `1425px`; capture `1425 × 891`
+- Mobile viewport: requested `390 × 844`; effective page width `375px`; capture `375 × 812`
+- State: first公开留言的管理员回复已展开
+- Scope: compare reply-toggle direction, placement, reply relationship and responsive behavior; message copy and IDs intentionally use local test data rather than the reference data
 
 ## Evidence
 
-- Generated project asset: `public/assets/images/hero-government-blue-v2.jpg` (`1983 × 793`, progressive JPEG)
-- Final desktop implementation: `artifacts/design-qa/15-page-blue-v2-desktop.jpg`
-- Final desktop focused Hero: `artifacts/design-qa/17-hero-blue-v2-desktop.jpg`
-- Final mobile implementation: `artifacts/design-qa/16-page-blue-v2-mobile.jpg`
-- Combined source/implementation comparison: `artifacts/design-qa/14-hero-blue-comparison.jpg`
-- Building-position before/after comparison: `artifacts/design-qa/18-hero-building-position-comparison.jpg`
+- Source reference: `artifacts/design-qa/21-reply-toggle-reference.png` (`1266 × 458`)
+- Desktop closed state: `artifacts/design-qa/22-reply-chevron-closed-desktop.jpg`
+- Desktop open state: `artifacts/design-qa/23-reply-chevron-open-desktop.jpg`
+- Mobile open state: `artifacts/design-qa/24-reply-chevron-open-mobile.jpg`
+- Normalized implementation crop: `artifacts/design-qa/25-reply-toggle-implementation-crop.jpg` (`1266 × 390`)
+- Combined source/implementation comparison: `artifacts/design-qa/25-reply-toggle-comparison.jpg` (`1266 × 848`)
 
-The comparison image places the reference government-blue header crop above the implemented Hero. The implementation crop was normalized from `1120 × 220` to `864 × 170`; density was 1 CSS pixel per captured pixel. The reference crop remains `864 × 104`. The different heights are intentional because the existing Hero also contains two explanatory paragraphs and a primary action.
+The combined comparison places the source above the implementation at the same `1266px` width. The focused implementation crop comes from the `1120px` public-board content region and was scaled to `1266px`; both captures use 1× browser density. The different crop heights reflect different message copy, not layout scaling.
 
 ## Required Fidelity Surfaces
 
 ### Fonts and typography
 
-- Existing Microsoft YaHei, PingFang SC and Noto Sans CJK SC fallbacks remain unchanged.
-- White title and body copy preserve a clear hierarchy over the blue image; text shadow is restrained and used only to protect legibility.
-- Desktop and mobile captures show no clipped headings or unintended wrapping.
+- The visible “查看回复（1）”“展开”“收起” copy has been removed as requested.
+- Native `<details>` and `<summary>` semantics remain, with visually hidden “展开或收起管理员回复” text for assistive technology.
+- Existing message, status and reply typography remains unchanged.
 
 ### Spacing and layout rhythm
 
-- Desktop Hero remains aligned to the existing `1120px` content grid and uses the established card radius.
-- The action remains on the right at desktop width and becomes a full-width control below the copy on mobile.
-- The mobile body has no horizontal overflow: document `scrollWidth` equals viewport width (`375px`).
+- The arrow occupies a `44 × 44px` interaction target at the message body's lower-right edge.
+- Desktop right inset is `30px`, matching the message-body padding; mobile right inset is `18px`, matching the mobile padding.
+- The administrator reply appears immediately below the arrow and uses the full available message-body width.
+- Mobile body width equals document scroll width (`375px`), so the change introduces no horizontal overflow.
 
 ### Colors and visual tokens
 
-- The asset matches the reference's navy-to-cobalt government portal palette with restrained cyan highlights.
-- White foreground text and the white primary action maintain strong contrast against the dark left and blue right regions.
-- The previous white Hero surface and blue top border have been replaced by the requested image treatment.
+- The arrow uses the established government blue and existing focus color.
+- Default state has no visible button border or fill; hover uses the existing pale-blue surface token.
+- Keyboard focus retains the project's yellow high-contrast outline, which is intentionally visible in automated open-state captures.
 
 ### Image quality and asset fidelity
 
-- A real local raster image is used rather than CSS illustration, SVG approximation or remote content.
-- The image contains the required low-contrast city and civic architecture silhouette, quiet left text area and brighter right-side depth.
-- In V2, the tallest rooftop begins around the image midpoint and the rendered skyline is concentrated along the Hero's bottom edge, keeping architecture out of the main reading area.
-- The production asset is a progressive `1983 × 793` JPEG compressed to about `72KB`, suitable for offline intranet deployment and responsive cover cropping.
-- Mobile background positioning keeps the copy over the darker portion of the image and the buildings below the copy.
+- The arrow is a real local transparent PNG: `public/assets/images/reply-chevron-down.png` (`48 × 48`).
+- The visible chevron fills approximately `40 × 22px` of the source asset and is rendered inside a `20 × 20px` image box.
+- Transparent corners and antialiased edges were verified; no CSS-drawn arrow, text glyph, inline SVG or remote asset is used.
+- The same down-chevron image rotates 180 degrees in the native open state, ensuring identical weight and alignment in both directions.
 
 ### Copy and content
 
-- Existing page title, legal notice, audit explanation and “我要留言” action are unchanged.
-- Search, navigation and reference-site branding were not reintroduced, consistent with the earlier page scope.
-- The generated background contains no text, logo, emblem, watermark or UI controls.
+- No visible toggle copy remains.
+- “管理员回复”, reply body and reply time remain unchanged.
+- The toggle is only rendered when a published reply exists.
 
 ## Interaction Verification
 
-- Background asset loaded from `/liuyanban/assets/images/hero-government-blue-v2.jpg`.
-- “我要留言” resolves to exactly one link and scrolls to `#message-form`.
-- Desktop and mobile rendering passed in the Codex in-app browser.
-- Browser console errors: none.
-- No horizontal overflow at the mobile breakpoint.
+- Four replied test messages expose four native reply toggles.
+- Closed state: down arrow, `<details open>` is false and icon transform is none.
+- First click: reply becomes visible, `<details open>` is true and icon rotates 180 degrees into an up arrow.
+- Second click: reply closes and the icon returns to the down-arrow state.
+- Summary retains a descriptive tooltip and hidden accessible name.
+- Desktop and mobile console errors: none.
+- PHP 7.3.4 syntax check, project smoke test and arrow HTTP loading check passed.
 
 ## Comparison History
 
-### Iteration 1
+### Iteration 1 — Icon scale
 
-- The first rendered desktop and mobile captures matched the target art direction.
-- No P0, P1 or P2 differences were found for the requested background change.
-- No follow-up visual correction was required.
+Finding:
 
-### Iteration 2 — Building visual weight
-
-Earlier finding:
-
-- P2: the skyline occupied the center-right of the rendered Hero and competed with the notice copy and primary action.
+- P2: the first transparent export retained excessive canvas padding, making the arrow too small at its 20px rendered size.
 
 Fix:
 
-- Moved the full skyline and civic architecture group into the bottom third without changing the palette, lighting, left-side negative space or page layout.
-- Switched the page to the non-destructive V2 asset and retained the original rendered capture for comparison.
+- Trimmed transparent padding, resized the visible chevron to `40 × 22px`, then centered it in a `48 × 48px` transparent asset.
 
 Post-fix evidence:
 
-- `18-hero-building-position-comparison.jpg` shows the original implementation above and V2 below at the same `1120 × 220` Hero size.
-- `15-page-blue-v2-desktop.jpg` and `16-page-blue-v2-mobile.jpg` confirm that the building group no longer occupies the main reading region.
+- `22-reply-chevron-closed-desktop.jpg` shows a clearly readable down arrow at the reference scale.
+
+### Iteration 2 — Reply width
+
+Finding:
+
+- P2: the initial grid implementation reserved a separate arrow column and narrowed the reply box, especially on mobile.
+
+Fix:
+
+- Replaced the grid with normal block layout, kept the summary right-aligned with `margin-left: auto`, and restored the reply box to full body width.
+
+Post-fix evidence:
+
+- Mobile reply width is `313px` with matching `18px` left and right insets inside a `349px` message body.
+- Desktop reply width is `908px`, equal to the body inner width, with matching `30px` insets.
+- `23-reply-chevron-open-desktop.jpg` and `24-reply-chevron-open-mobile.jpg` show the corrected layout.
 
 No actionable P0, P1 or P2 findings remain after the second pass.
 
 ## Findings
 
-No actionable P0/P1/P2 visual or interaction findings remain. The generated skyline is slightly more detailed than the reference's translucent silhouette, but its lower position and reduced visible area prevent it from competing with the foreground copy.
+No actionable P0/P1/P2 visual, responsive, accessibility or interaction findings remain. The yellow circle visible in the automated open-state screenshots is the intentional keyboard focus outline, not permanent button chrome.
 
 ## Open Questions
 
@@ -98,12 +108,13 @@ No actionable P0/P1/P2 visual or interaction findings remain. The generated skyl
 
 ## Implementation Checklist
 
-- [x] Use a local offline image asset.
-- [x] Preserve `/liuyanban/` asset resolution.
-- [x] Match the government-blue reference art direction.
-- [x] Preserve readable HTML copy and the existing action.
-- [x] Verify desktop and mobile crops.
-- [x] Verify the Hero anchor interaction and browser console.
+- [x] Use down arrow for closed state.
+- [x] Rotate to up arrow for open state.
+- [x] Position the toggle at the message lower-right.
+- [x] Remove visible toggle copy.
+- [x] Preserve native keyboard and assistive-technology semantics.
+- [x] Preserve full-width reply layout.
+- [x] Verify desktop and mobile behavior.
 
 ## Follow-up Polish
 

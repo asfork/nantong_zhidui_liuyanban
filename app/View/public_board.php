@@ -103,7 +103,17 @@ $filterLabels = array(
 
                         <?php if ($hasReply): ?>
                             <details class="reply-panel">
-                                <summary>查看回复（1）</summary>
+                                <summary title="展开或收起管理员回复">
+                                    <img
+                                        class="reply-toggle-icon"
+                                        src="<?= e(asset_url('/assets/images/reply-chevron-down.png')) ?>"
+                                        width="20"
+                                        height="20"
+                                        alt=""
+                                        aria-hidden="true"
+                                    >
+                                    <span class="visually-hidden">展开或收起管理员回复</span>
+                                </summary>
                                 <div class="reply-content">
                                     <h4>管理员回复</h4>
                                     <p><?= nl2br(e($message['reply_content'])) ?></p>
