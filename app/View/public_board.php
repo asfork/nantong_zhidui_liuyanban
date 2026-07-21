@@ -102,7 +102,7 @@ $filterLabels = array(
                         </time>
 
                         <?php if ($hasReply): ?>
-                            <details class="reply-panel">
+                            <details class="reply-panel" open>
                                 <summary title="展开或收起管理员回复">
                                     <img
                                         class="reply-toggle-icon"

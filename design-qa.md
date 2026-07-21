@@ -57,9 +57,9 @@ The combined comparison places the source above the implementation at the same `
 ## Interaction Verification
 
 - Four replied test messages expose four native reply toggles.
-- Closed state: down arrow, `<details open>` is false and icon transform is none.
-- First click: reply becomes visible, `<details open>` is true and icon rotates 180 degrees into an up arrow.
-- Second click: reply closes and the icon returns to the down-arrow state.
+- Default state: replied messages are expanded, `<details open>` is true and the icon rotates 180 degrees into an up arrow.
+- First click: reply closes, `<details open>` becomes false and the icon returns to the down-arrow state.
+- Second click: reply expands again and the icon returns to the up-arrow state.
 - Summary retains a descriptive tooltip and hidden accessible name.
 - Desktop and mobile console errors: none.
 - PHP 7.3.4 syntax check, project smoke test and arrow HTTP loading check passed.
@@ -110,6 +110,7 @@ No actionable P0/P1/P2 visual, responsive, accessibility or interaction findings
 
 - [x] Use down arrow for closed state.
 - [x] Rotate to up arrow for open state.
+- [x] Expand replied messages by default.
 - [x] Position the toggle at the message lower-right.
 - [x] Remove visible toggle copy.
 - [x] Preserve native keyboard and assistive-technology semantics.
