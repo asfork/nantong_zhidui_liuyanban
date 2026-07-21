@@ -276,13 +276,32 @@ h1 {
 
 .message-meta {
     display: flex;
+    align-items: center;
     flex-direction: column;
     justify-content: center;
-    gap: 4px;
+    gap: 10px;
     padding: 28px 20px;
     text-align: center;
     background: var(--blue-050);
     border-right: 1px solid var(--line);
+}
+
+.anonymous-avatar {
+    display: block;
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    background: #fff;
+    border: 1px solid #b8cee8;
+    border-radius: 50%;
+    box-shadow: 0 3px 10px rgba(7, 59, 128, 0.12);
+}
+
+.anonymous-meta-copy {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .anonymous-label {
@@ -650,10 +669,20 @@ h1 {
         align-items: center;
         flex-direction: row;
         justify-content: flex-start;
+        gap: 12px;
         padding: 12px 18px;
         text-align: left;
         border-right: 0;
         border-bottom: 1px solid var(--line);
+    }
+
+    .anonymous-avatar {
+        width: 44px;
+        height: 44px;
+    }
+
+    .anonymous-meta-copy {
+        align-items: flex-start;
     }
 
     .message-body {

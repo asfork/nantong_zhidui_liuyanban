@@ -74,8 +74,18 @@ $filterLabels = array(
                 <?php $hasReply = !empty($message['reply_id']); ?>
                 <article class="message-card">
                     <div class="message-meta">
-                        <span class="anonymous-label">匿名留言</span>
-                        <span class="message-number">编号 #<?= str_pad((string) $message['id'], 6, '0', STR_PAD_LEFT) ?></span>
+                        <img
+                            class="anonymous-avatar"
+                            src="<?= e(asset_url('/assets/images/anonymous-avatar.png')) ?>"
+                            width="64"
+                            height="64"
+                            alt=""
+                            aria-hidden="true"
+                        >
+                        <div class="anonymous-meta-copy">
+                            <span class="anonymous-label">匿名留言</span>
+                            <span class="message-number">编号 #<?= str_pad((string) $message['id'], 6, '0', STR_PAD_LEFT) ?></span>
+                        </div>
                     </div>
                     <div class="message-body">
                         <div class="message-heading">
