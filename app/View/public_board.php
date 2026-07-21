@@ -11,7 +11,7 @@ $filterLabels = array(
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>网上匿名留言</title>
-    <link rel="stylesheet" href="<?= e(base_url('/assets/css/app.css')) ?>">
+    <link rel="stylesheet" href="<?= e(asset_url('/assets/css/app.css')) ?>">
 </head>
 <body>
 <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -97,8 +97,8 @@ $filterLabels = array(
                                 <div class="reply-content">
                                     <h4>管理员回复</h4>
                                     <p><?= nl2br(e($message['reply_content'])) ?></p>
-                                    <time datetime="<?= e(date('c', strtotime($message['reply_created_at']))) ?>">
-                                        回复于 <?= e(date('Y-m-d H:i', strtotime($message['reply_created_at']))) ?>
+                                    <time datetime="<?= e(date('c', strtotime($message['reply_published_at']))) ?>">
+                                        回复于 <?= e(date('Y-m-d H:i', strtotime($message['reply_published_at']))) ?>
                                     </time>
                                 </div>
                             </details>
@@ -229,7 +229,6 @@ $filterLabels = array(
     </div>
 </footer>
 
-<script src="<?= e(base_url('/assets/js/app.js')) ?>" defer></script>
+<script src="<?= e(asset_url('/assets/js/app.js')) ?>" defer></script>
 </body>
 </html>
-

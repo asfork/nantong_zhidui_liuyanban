@@ -219,6 +219,22 @@
     border-color: #d6a19c;
 }
 
+.admin-button-danger-secondary:hover {
+    background: var(--error-bg);
+}
+
+.admin-button-quiet {
+    color: var(--ink-700);
+    background: transparent;
+    border-color: transparent;
+}
+
+.admin-button-quiet:hover {
+    color: var(--blue-800);
+    background: rgba(255, 255, 255, 0.72);
+    border-color: #9fb8d6;
+}
+
 .admin-button-disabled,
 .admin-button:disabled {
     color: #6f7f90;
@@ -235,34 +251,76 @@
 
 .batch-toolbar {
     display: flex;
-    min-height: 68px;
+    min-height: 76px;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    padding: 12px 18px;
+    padding: 12px 18px 12px 20px;
+    background: #fff;
     border-bottom: 1px solid var(--line);
+    transition: background-color 160ms ease, box-shadow 160ms ease;
 }
 
-.batch-toolbar > div {
+.batch-toolbar.is-batch-active {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    background: #eaf3ff;
+    box-shadow: 0 7px 18px rgba(25, 79, 143, 0.14);
+}
+
+.batch-toolbar-summary {
     display: flex;
     align-items: baseline;
     gap: 12px;
+    white-space: nowrap;
 }
 
-.batch-toolbar > div span,
-.batch-form > span {
+.batch-toolbar-summary span,
+.batch-selection-status span {
     color: var(--ink-500);
     font-size: 14px;
 }
 
 .batch-form {
     display: flex;
+    min-width: 0;
     align-items: center;
+    justify-content: flex-end;
     gap: 10px;
 }
 
-.batch-form select {
-    width: 190px;
+.batch-selection-status {
+    display: flex;
+    min-width: 168px;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.batch-selection-status strong {
+    color: var(--ink-700);
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.batch-toolbar.is-batch-active .batch-selection-status strong {
+    color: var(--blue-800);
+}
+
+.batch-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.admin-button-compact {
+    min-height: 38px;
+    padding: 6px 12px;
+    font-size: 14px;
+    white-space: nowrap;
 }
 
 .admin-table-scroll {
@@ -308,6 +366,14 @@
 
 .admin-table tbody tr.is-selected td {
     background: #eaf3ff;
+}
+
+.admin-table tbody tr.is-batch-selected td {
+    background: #f1f7ff;
+}
+
+.admin-table tbody tr.is-batch-selected td:first-child {
+    box-shadow: inset 4px 0 0 #2f81d4;
 }
 
 .admin-table tbody tr.is-selected td:first-child {
@@ -714,6 +780,21 @@
         border-right: 0;
         border-bottom: 1px solid var(--line);
     }
+
+    .batch-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .batch-form,
+    .batch-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .batch-selection-status {
+        align-items: flex-start;
+    }
 }
 
 @media (max-width: 820px) {
@@ -759,8 +840,8 @@
         flex: 1;
     }
 
-    .batch-form select {
-        width: 100%;
+    .batch-actions .admin-button {
+        flex: 1 1 132px;
     }
 
     .detail-statuses {
@@ -801,6 +882,7 @@
     }
 
     .admin-filter-actions .admin-button,
+    .batch-actions .admin-button,
     .state-actions form,
     .state-actions .admin-button,
     .reply-actions .admin-button {

@@ -318,8 +318,10 @@ final class AdminMessageRepository
         $conditions = array('1 = 1');
         $params = array();
         if ($filters['keyword'] !== '') {
-            $conditions[] = '(m.title LIKE :keyword OR m.content LIKE :keyword)';
-            $params[':keyword'] = '%' . $filters['keyword'] . '%';
+            $conditions[] = '(m.title LIKE :title_keyword OR m.content LIKE :content_keyword)';
+            $keyword = '%' . $filters['keyword'] . '%';
+            $params[':title_keyword'] = $keyword;
+            $params[':content_keyword'] = $keyword;
         }
         if ($filters['audit'] !== 'all') {
             $conditions[] = 'm.audit_status = :audit_status';

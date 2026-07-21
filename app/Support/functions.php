@@ -27,6 +27,15 @@ function base_url($path = '')
     return $basePath . ($path === '/' ? '/' : $path);
 }
 
+function asset_url($path)
+{
+    $path = '/' . ltrim((string) $path, '/');
+    $file = dirname(__DIR__, 2) . '/public' . $path;
+    $version = is_file($file) ? (string) filemtime($file) : '1';
+
+    return base_url($path) . '?v=' . rawurlencode($version);
+}
+
 function e($value)
 {
     return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');

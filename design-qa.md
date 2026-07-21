@@ -3,10 +3,11 @@
 ## Comparison Target
 
 - Source visual truth: `audit/figma-liuyan-admin/01-admin-management.png`
+- Batch-management workflow baseline: `artifacts/batch-management-audit/02-selected.png`
 - Implemented route: `http://127.0.0.1:8088/liuyanban/admin/`
 - Desktop viewport: `1536 × 1024`
 - Additional responsive viewports: `820 × 900` and `390 × 844`
-- State: authenticated administrator, normal-message filter, first list row selected, no unsaved reply text
+- State: authenticated administrator, normal-message filter, batch-selected messages #10 and #7, no unsaved reply text
 
 ## Evidence
 
@@ -16,8 +17,17 @@
 - Focused detail comparison: `artifacts/admin-design-qa/09-detail-comparison.png`
 - Tablet implementation: `artifacts/admin-design-qa/04-admin-tablet-820.png`
 - Mobile implementation: `artifacts/admin-design-qa/05-admin-mobile-390.png`
+- Batch toolbar desktop initial state: `artifacts/batch-management-implementation/01-desktop-initial-1536.png`
+- Batch toolbar desktop selected state: `artifacts/batch-management-implementation/02-desktop-selected-1536.png`
+- Batch toolbar tablet selected state: `artifacts/batch-management-implementation/03-tablet-selected-820.png`
+- Batch toolbar mobile selected state: `artifacts/batch-management-implementation/04-mobile-selected-390.png`
+- Batch toolbar normalized selected state: `artifacts/batch-management-implementation/05-selected-1253x705.png`
+- Batch toolbar full comparison: `artifacts/batch-management-implementation/06-full-comparison.png`
+- Batch toolbar focused comparison: `artifacts/batch-management-implementation/07-toolbar-comparison.png`
 
 The full-view comparison places the 1536 × 1024 source and implementation on one canvas. The implementation intentionally uses larger rows and controls, so the detail editor sits below the first desktop viewport; the focused comparison evaluates that region separately.
+
+The batch-management comparison additionally places the before and after selected states side by side at the same 1253 × 705 viewport. The focused comparison isolates the toolbar so action visibility, selected-count hierarchy and danger styling can be judged directly.
 
 ## Required Fidelity Surfaces
 
@@ -39,6 +49,7 @@ The full-view comparison places the 1536 × 1024 source and implementation on on
 - Existing public-page blue, neutral, green, amber and red tokens are reused.
 - Audit, reply, display and deletion states use both text and bordered background treatments, not color alone.
 - Selected rows use a pale-blue fill and left accent consistent with the source's active treatment.
+- Active batch mode adds a pale-blue sticky toolbar, while the destructive recycle-bin action remains red and all other states reuse the established administrative palette.
 
 ### Image quality and asset fidelity
 
@@ -57,7 +68,10 @@ The full-view comparison places the 1536 × 1024 source and implementation on on
 - Authentication: passed with the PHP 7.3 bcrypt development account; unauthenticated management access redirects to login.
 - Status filtering: passed; selecting “待审核” returns exactly the seeded pending message and preserves the selected filter in the URL.
 - Current-row context: passed; the selected row and “正在处理 #ID” detail heading agree.
-- Batch selection: passed; “已选择 1 条” updates and the Apply button enables only after both a row and action are selected.
+- Batch selection: passed; the selected count and row highlights update immediately, all relevant actions enable after selection, and “取消选择” clears the state.
+- Batch action discoverability: passed; normal messages expose approve, reject, show, hide and recycle-bin actions as direct buttons, while the recycle-bin filter exposes only restore.
+- Batch action submission: passed end to end; seeded message #8 was batch-shown and batch-hidden again, the final state is hidden, and both operations were written to the operation log.
+- Static asset refresh: passed; CSS and JavaScript URLs include file modification versions so older cached batch scripts do not override the new interaction.
 - Draft/publish separation: passed; a draft is excluded from the public “已回复” filter, while publishing makes the reply visible without automatically changing audit or display state.
 - Soft deletion: passed; moving a test message to the recycle bin removes it from the public page and restoration clears `deleted_at`.
 - Operation logging: passed for login, audit, reply, hide, soft-delete and restore paths.
@@ -92,6 +106,27 @@ Post-fix evidence:
 
 No actionable P0, P1 or P2 findings remain.
 
+### Iteration 3 — Batch management P0
+
+Earlier finding:
+
+- P1: the checkbox supported selection, but the actual actions were hidden in a low-emphasis select-and-apply control, so the workflow could be mistaken for unfinished functionality.
+
+Fixes:
+
+- Replaced the action dropdown with visible approve, reject, show, hide and recycle-bin buttons.
+- Added an always-visible instruction, selected count, 100-item limit, active sticky treatment, selected-row treatment and cancel-selection action.
+- Scoped normal-message and recycle-bin actions to the current data range.
+- Added asset URL versioning to prevent stale JavaScript or CSS after deployment.
+
+Post-fix evidence:
+
+- `06-full-comparison.png` shows the complete before/after selected flow at the same viewport.
+- `07-toolbar-comparison.png` shows that the selected count and available actions are now visible without opening another control.
+- `03-tablet-selected-820.png` and `04-mobile-selected-390.png` show wrapped action buttons without body-level horizontal overflow.
+
+No actionable P0, P1 or P2 findings remain after the batch-management pass.
+
 ## Findings
 
 No actionable P0/P1/P2 visual or interaction findings remain. The detail editor being below the first viewport is an intentional accessibility trade-off caused by larger text, controls and table rows.
@@ -111,6 +146,9 @@ No actionable P0/P1/P2 visual or interaction findings remain. The detail editor 
 - [x] Protect writes with authentication, CSRF validation and prepared statements.
 - [x] Record administrator operations.
 - [x] Verify desktop, tablet and mobile rendering in the in-app browser.
+- [x] Make batch actions directly discoverable after selection.
+- [x] Restrict recycle-bin batch actions to restoration.
+- [x] Version static asset URLs to invalidate stale browser caches.
 
 ## Follow-up Polish
 

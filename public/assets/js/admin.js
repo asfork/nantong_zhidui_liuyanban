@@ -22,23 +22,38 @@
 
     var selectAll = document.querySelector('[data-select-all]');
     var rowSelects = Array.prototype.slice.call(document.querySelectorAll('[data-row-select]'));
+    var batchToolbar = document.querySelector('[data-batch-toolbar]');
     var batchForm = document.querySelector('[data-batch-form]');
-    var batchAction = document.querySelector('[data-batch-action]');
-    var batchSubmit = document.querySelector('[data-batch-submit]');
+    var batchActionInput = document.querySelector('[data-batch-action-input]');
+    var batchActionButtons = Array.prototype.slice.call(document.querySelectorAll('[data-batch-action]'));
+    var batchCancel = document.querySelector('[data-batch-cancel]');
     var selectedCount = document.querySelector('[data-selected-count]');
+    var pendingBatchAction = '';
 
     function updateBatchState() {
         var checked = rowSelects.filter(function (input) { return input.checked; }).length;
         if (selectedCount) {
-            selectedCount.textContent = '已选择 ' + checked + ' 条';
+            selectedCount.textContent = checked > 0 ? '已选择 ' + checked + ' 条' : '勾选留言后可批量处理';
+        }
+        if (batchToolbar) {
+            batchToolbar.classList.toggle('is-batch-active', checked > 0);
         }
         if (selectAll) {
             selectAll.checked = checked > 0 && checked === rowSelects.length;
             selectAll.indeterminate = checked > 0 && checked < rowSelects.length;
         }
-        if (batchSubmit) {
-            batchSubmit.disabled = checked === 0 || !batchAction || batchAction.value === '';
+        batchActionButtons.forEach(function (button) {
+            button.disabled = checked === 0;
+        });
+        if (batchCancel) {
+            batchCancel.disabled = checked === 0;
         }
+        rowSelects.forEach(function (input) {
+            var row = input.closest ? input.closest('tr') : null;
+            if (row) {
+                row.classList.toggle('is-batch-selected', input.checked);
+            }
+        });
     }
 
     if (selectAll) {
@@ -50,13 +65,31 @@
     rowSelects.forEach(function (input) {
         input.addEventListener('change', updateBatchState);
     });
-    if (batchAction) {
-        batchAction.addEventListener('change', updateBatchState);
+    batchActionButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            pendingBatchAction = button.getAttribute('data-batch-action') || '';
+            if (batchActionInput) {
+                batchActionInput.value = pendingBatchAction;
+            }
+        });
+    });
+    if (batchCancel) {
+        batchCancel.addEventListener('click', function () {
+            rowSelects.forEach(function (input) { input.checked = false; });
+            pendingBatchAction = '';
+            if (batchActionInput) {
+                batchActionInput.value = '';
+            }
+            updateBatchState();
+            if (selectAll) {
+                selectAll.focus();
+            }
+        });
     }
     if (batchForm) {
         batchForm.addEventListener('submit', function (event) {
             var checked = rowSelects.filter(function (input) { return input.checked; }).length;
-            if (checked === 0 || !batchAction || batchAction.value === '') {
+            if (checked === 0 || pendingBatchAction === '') {
                 event.preventDefault();
                 return;
             }
@@ -68,12 +101,21 @@
                 soft_delete: '移至回收站',
                 restore: '从回收站恢复'
             };
-            var message = '确认将选中的 ' + checked + ' 条留言执行“' + labels[batchAction.value] + '”吗？';
-            if (batchAction.value === 'soft_delete') {
+            var message = '确认将选中的 ' + checked + ' 条留言执行“' + labels[pendingBatchAction] + '”吗？';
+            if (pendingBatchAction === 'soft_delete') {
                 message += ' 留言将从公开页面移除，但之后可以恢复。';
             }
             if (!window.confirm(message)) {
                 event.preventDefault();
+                pendingBatchAction = '';
+                if (batchActionInput) {
+                    batchActionInput.value = '';
+                }
+                return;
+            }
+            batchActionButtons.forEach(function (button) { button.disabled = true; });
+            if (batchCancel) {
+                batchCancel.disabled = true;
             }
         });
     }

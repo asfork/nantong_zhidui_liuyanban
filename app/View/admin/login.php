@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>管理员登录 - 留言管理后台</title>
-    <link rel="stylesheet" href="<?= e(base_url('/assets/css/app.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_url('/assets/css/admin.css')) ?>">
+    <link rel="stylesheet" href="<?= e(asset_url('/assets/css/app.css')) ?>">
+    <link rel="stylesheet" href="<?= e(asset_url('/assets/css/admin.css')) ?>">
 </head>
 <body class="admin-body login-body">
 <a class="skip-link" href="#login-main">跳到登录表单</a>
@@ -44,6 +44,6 @@
         <a class="login-back-link" href="<?= e(base_url('/')) ?>">返回公开留言板</a>
     </section>
 </main>
-<script src="<?= e(base_url('/assets/js/admin.js')) ?>" defer></script>
+<script src="<?= e(asset_url('/assets/js/admin.js')) ?>" defer></script>
 </body>
 </html>

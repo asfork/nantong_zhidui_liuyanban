@@ -22,6 +22,12 @@ if (isset($_GET['refresh_captcha'])) {
     redirect_to('/#message-form');
 }
 
+if (request_is_post() && !form_content_type_is_valid()) {
+    http_response_code(415);
+    header('Content-Type: text/plain; charset=UTF-8');
+    exit('仅支持表单提交。');
+}
+
 $databaseError = null;
 $repository = null;
 

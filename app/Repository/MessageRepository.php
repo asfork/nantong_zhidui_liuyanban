@@ -63,7 +63,7 @@ final class MessageRepository
                 m.created_at,
                 r.id AS reply_id,
                 r.content AS reply_content,
-                r.created_at AS reply_created_at
+                COALESCE(r.published_at, r.created_at) AS reply_published_at
             FROM liuyan_message m
             LEFT JOIN liuyan_reply r ON r.id = (
                 SELECT rr.id

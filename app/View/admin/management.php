@@ -88,26 +88,32 @@ require __DIR__ . '/_header.php';
 </section>
 
 <section class="admin-panel admin-list-panel" aria-labelledby="message-table-title">
-    <div class="batch-toolbar">
-        <div>
+    <div class="batch-toolbar" data-batch-toolbar>
+        <div class="batch-toolbar-summary">
             <strong id="message-table-title">留言列表</strong>
             <span>共 <?= (int) $messages['total'] ?> 条</span>
         </div>
-        <form id="batch-form" method="post" action="<?= e(base_url('/admin/action.php')) ?>" class="batch-form" data-batch-form>
+        <form id="batch-form" method="post" action="<?= e(base_url('/admin/action.php')) ?>" class="batch-form" data-batch-form aria-label="批量管理留言">
             <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
             <input type="hidden" name="return_query" value="<?= e($returnQuery) ?>">
-            <span data-selected-count>已选择 0 条</span>
-            <label for="batch-action" class="visually-hidden">批量操作</label>
-            <select id="batch-action" name="action" data-batch-action>
-                <option value="">选择批量操作</option>
-                <option value="approve">审核通过</option>
-                <option value="reject">审核驳回</option>
-                <option value="show">设为显示</option>
-                <option value="hide">设为隐藏</option>
-                <option value="soft_delete">移至回收站</option>
-                <option value="restore">从回收站恢复</option>
-            </select>
-            <button type="submit" class="admin-button admin-button-primary" disabled data-batch-submit>应用</button>
+            <input type="hidden" name="action" value="" data-batch-action-input>
+            <div class="batch-selection-status">
+                <strong data-selected-count aria-live="polite">勾选留言后可批量处理</strong>
+                <span>最多选择 100 条</span>
+            </div>
+            <div class="batch-actions" aria-label="可用批量操作">
+                <?php if ($filters['deleted'] !== 'deleted'): ?>
+                    <button type="submit" class="admin-button admin-button-success admin-button-compact" disabled data-batch-action="approve">审核通过</button>
+                    <button type="submit" class="admin-button admin-button-secondary admin-button-compact" disabled data-batch-action="reject">审核驳回</button>
+                    <button type="submit" class="admin-button admin-button-secondary admin-button-compact" disabled data-batch-action="show">设为显示</button>
+                    <button type="submit" class="admin-button admin-button-secondary admin-button-compact" disabled data-batch-action="hide">设为隐藏</button>
+                    <button type="submit" class="admin-button admin-button-danger-secondary admin-button-compact" disabled data-batch-action="soft_delete">移至回收站</button>
+                <?php endif; ?>
+                <?php if ($filters['deleted'] !== 'active'): ?>
+                    <button type="submit" class="admin-button admin-button-success admin-button-compact" disabled data-batch-action="restore">从回收站恢复</button>
+                <?php endif; ?>
+                <button type="button" class="admin-button admin-button-quiet admin-button-compact" disabled data-batch-cancel>取消选择</button>
+            </div>
         </form>
     </div>
 

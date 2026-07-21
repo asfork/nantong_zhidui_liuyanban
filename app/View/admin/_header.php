@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($adminPageTitle) ?> - 留言管理后台</title>
-    <link rel="stylesheet" href="<?= e(base_url('/assets/css/app.css')) ?>">
-    <link rel="stylesheet" href="<?= e(base_url('/assets/css/admin.css')) ?>">
+    <link rel="stylesheet" href="<?= e(asset_url('/assets/css/app.css')) ?>">
+    <link rel="stylesheet" href="<?= e(asset_url('/assets/css/admin.css')) ?>">
 </head>
 <body class="admin-body">
 <a class="skip-link" href="#admin-main">跳到主要内容</a>
