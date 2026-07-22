@@ -1,0 +1,75 @@
+services:
+  apache:
+    image: httpd:2.4.39
+    platform: linux/amd64
+    ports:
+      - "${DEMO_BIND_ADDRESS:-0.0.0.0}:${DEMO_HTTP_PORT:-18088}:80"
+    volumes:
+      - ${DEMO_APP_DIR}:/var/www/html:ro
+      - ./httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+    depends_on:
+      - php
+    restart: unless-stopped
+
+  php:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "0"
+      APP_BASE_PATH: /liuyanban
+      APP_TIMEZONE: Asia/Shanghai
+      APP_SESSION_NAME: LIUYANBANSESSID
+      DB_HOST: mysql
+      DB_PORT: "3306"
+      DB_DATABASE: zhidui_nantong
+      DB_USERNAME: liuyanban_demo
+      DB_PASSWORD: ${MYSQL_APP_PASSWORD}
+      DB_TIMEZONE: "+08:00"
+      ADMIN_TABLE: admin
+      ADMIN_ID_COLUMN: id
+      ADMIN_USERNAME_COLUMN: username
+      ADMIN_PASSWORD_COLUMN: password
+      ADMIN_TYPE_COLUMN: user_type
+      ADMIN_ALLOWED_TYPES: "1"
+      ADMIN_PASSWORD_DRIVER: bcrypt
+    volumes:
+      - ${DEMO_APP_DIR}:/var/www/html:ro
+      - demo-log:/var/www/html/var/log
+      - demo-session:/var/www/html/var/session
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  mysql:
+    image: mysql/mysql-server:5.7.26
+    platform: linux/amd64
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+08:00
+      - --sql-mode=STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+    environment:
+      MYSQL_DATABASE: zhidui_nantong
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: liuyanban_demo
+      MYSQL_PASSWORD: ${MYSQL_APP_PASSWORD}
+      TZ: Asia/Shanghai
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=$${MYSQL_ROOT_PASSWORD} mysqladmin ping -h localhost -uroot --silent"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+    volumes:
+      - demo-mysql:/var/lib/mysql
+      - ./legacy-admin.sql:/docker-entrypoint-initdb.d/10-legacy-admin.sql:ro
+      - ${DEMO_APP_DIR}/database/production/001_liuyan_schema.sql:/docker-entrypoint-initdb.d/20-liuyan-schema.sql:ro
+    restart: unless-stopped
+
+volumes:
+  demo-log:
+  demo-session:
+  demo-mysql:

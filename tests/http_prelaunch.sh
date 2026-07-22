@@ -3,6 +3,10 @@
 set -eu
 
 BASE_URL="${1:-http://127.0.0.1:8088/liuyanban}"
+QA_ADMIN_USERNAME="${QA_ADMIN_USERNAME:-admin}"
+QA_ADMIN_PASSWORD="${QA_ADMIN_PASSWORD:-password}"
+QA_EXPECTED_PUBLIC_REPLIED="${QA_EXPECTED_PUBLIC_REPLIED:-11}"
+QA_EXPECTED_PUBLIC_WAITING="${QA_EXPECTED_PUBLIC_WAITING:-14}"
 QA_TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$QA_TMP_DIR"' EXIT HUP INT TERM
 
@@ -77,8 +81,8 @@ REPLIED_BODY="$QA_TMP_DIR/replied.html"
 WAITING_BODY="$QA_TMP_DIR/waiting.html"
 curl -fsS "$BASE_URL/?status=replied" -o "$REPLIED_BODY"
 curl -fsS "$BASE_URL/?status=waiting" -o "$WAITING_BODY"
-expect_contains "$REPLIED_BODY" "已回复 <span>(11)</span>" "公开已回复筛选数量与数据库一致"
-expect_contains "$WAITING_BODY" "待回复 <span>(14)</span>" "公开待回复筛选数量与数据库一致"
+expect_contains "$REPLIED_BODY" "已回复 <span>($QA_EXPECTED_PUBLIC_REPLIED)</span>" "公开已回复筛选数量与数据库一致"
+expect_contains "$WAITING_BODY" "待回复 <span>($QA_EXPECTED_PUBLIC_WAITING)</span>" "公开待回复筛选数量与数据库一致"
 
 ASSET_CODE="$(curl -sS -o /dev/null -w '%{http_code}' "$BASE_URL/assets/images/reply-chevron-down.png")"
 expect_equal "$ASSET_CODE" "200" "回复箭头静态资源可访问"
@@ -112,10 +116,10 @@ LOGIN_POST_HEADERS="$QA_TMP_DIR/login-post-headers.txt"
 LOGIN_POST_CODE="$(curl -sS -b "$COOKIE_JAR" -c "$COOKIE_JAR" -D "$LOGIN_POST_HEADERS" -o /dev/null -w '%{http_code}' \
     -X POST \
     --data-urlencode "csrf_token=$CSRF_TOKEN" \
-    --data-urlencode "username=admin" \
-    --data-urlencode "password=password" \
+    --data-urlencode "username=$QA_ADMIN_USERNAME" \
+    --data-urlencode "password=$QA_ADMIN_PASSWORD" \
     "$BASE_URL/admin/login.php")"
-expect_equal "$LOGIN_POST_CODE" "303" "开发管理员可登录后台"
+expect_equal "$LOGIN_POST_CODE" "303" "测试管理员可登录后台"
 expect_contains "$LOGIN_POST_HEADERS" "/liuyanban/admin/" "登录成功跳转管理页"
 
 ADMIN_BODY="$QA_TMP_DIR/admin.html"
